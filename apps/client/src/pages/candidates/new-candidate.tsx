@@ -49,16 +49,43 @@ export function NewCandidateForm() {
     defaultValues,
   });
 
-  function onSubmit(data: AccountFormValues) {
-    alert(JSON.stringify(data, null, 2))
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  async function onSubmit(data: AccountFormValues) {
+    try {
+      const response = await fetch("http://localhost:3000/candidates", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create candidate");
+      }
+
+      const result = await response.json();
+
+      alert(JSON.stringify(result));
+
+      toast({
+        title: "Candidate Created",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">
+              {JSON.stringify(result, null, 2)}
+            </code>
+          </pre>
+        ),
+      });
+
+      // Optionally reset form
+      form.reset();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Could not create candidate. Please try again.",
+      });
+    }
   }
 
   return (

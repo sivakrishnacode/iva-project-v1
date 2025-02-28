@@ -2,7 +2,7 @@
   "name": "iva-project",
   "private": true,
   "scripts": {
-    "build": "turbo run build",
+    "build": "npx prisma generate --schema ./apps/server/prisma/schema.prisma && turbo run build",
     "dev": "NODE_ENV=development && turbo run dev  --parallel",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",

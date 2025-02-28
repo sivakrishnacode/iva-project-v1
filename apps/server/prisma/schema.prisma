@@ -14,9 +14,18 @@ datasource db {
 }
 
 model Candidate {
-  id     String @id @default(uuid()) // Unique identifier
-  name   String
-  email  String @unique
-  phone  String
-  status String
+  id        String          @id @default(uuid()) // Unique identifier
+  firstName String
+  lastName  String
+  email     String          @unique
+  phone     String
+  dob       DateTime
+  address   String
+  status    CandidateStatus @default(PENDING) // Default status as PENDING
+}
+
+enum CandidateStatus {
+  HIRED
+  PENDING
+  REJECTED
 }

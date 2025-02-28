@@ -12,38 +12,22 @@ import {
 
 interface Candidate {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
-  status: string;
+  status: "HIRED" | "PENDING" | "REJECTED";
 }
 
 export function CandidateList() {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchCandidates = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/candidates");
-        if (!response.ok) {
-          throw new Error("Failed to fetch candidates");
-        }
-        const data = await response.json();
-        setCandidates(data);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCandidates();
+    fetch("http://localhost:3000/candidates")
+      .then((response) => response.json())
+      .then((data) => setCandidates(data))
+      .catch((error) => console.error("Error fetching candidates:", error));
   }, []);
-
-  if (loading) return <p className="p-10">Loading candidates...</p>;
-  if (error) return <p className="p-10 text-red-500">Error: {error}</p>;
 
   return (
     <div className="flex-1 p-10">
@@ -61,10 +45,10 @@ export function CandidateList() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {candidates.map((candidate) => (
+          {candidates.map((candidate, index) => (
             <TableRow key={candidate.id}>
-              <TableCell className="font-medium">{candidate.id}</TableCell>
-              <TableCell>{candidate.name}</TableCell>
+              <TableCell className="font-medium">{index + 1}</TableCell>
+              <TableCell>{`${candidate.firstName} ${candidate.lastName}`}</TableCell>
               <TableCell>{candidate.email}</TableCell>
               <TableCell>{candidate.phone}</TableCell>
               <TableCell className="text-right">{candidate.status}</TableCell>
