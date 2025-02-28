@@ -1,0 +1,25 @@
+{
+  "name": "iva-project",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "NODE_ENV=development && turbo run dev  --parallel",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "check-types": "turbo run check-types",
+    "prisma:push": "npx prisma db push --schema ./apps/server/prisma/schema.prisma",
+    "prisma:generate": "npx prisma generate --schema ./apps/server/prisma/schema.prisma"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.0",
+    "turbo": "^2.4.4",
+    "typescript": "5.7.3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "npm@8.19.4",
+  "workspaces": [
+    "apps/**"
+  ]
+}
