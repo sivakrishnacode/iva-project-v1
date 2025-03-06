@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { API_URL } from "@/lib/config";
 
 interface Candidate {
   id: string;
@@ -61,12 +62,12 @@ export function CandidateList() {
   const [scheduledTime, setScheduledTime] = useState<string>("");
 
   useEffect(() => {
-    fetch("http://localhost:3000/candidates")
+    fetch(`${API_URL}candidates`)
       .then((response) => response.json())
       .then((data) => setCandidates(data))
       .catch((error) => console.error("Error fetching candidates:", error));
 
-    // fetch("http://localhost:3000/jobs")
+    // fetch(`${API_URL}jobs`)
     //   .then((response) => response.json())
     //   .then((data) => setJobs(data))
     //   .catch((error) => console.error("Error fetching jobs:", error));

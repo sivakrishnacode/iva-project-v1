@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { API_URL } from "@/lib/config";
 
 interface Candidate {
   id: string;
@@ -23,7 +24,7 @@ export function ShortlistedCandidates() {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/candidates?status=PENDING")
+    fetch(`${API_URL}candidates?status=PENDING`)
       .then((response) => response.json())
       .then((data) => setCandidates(data))
       .catch((error) =>

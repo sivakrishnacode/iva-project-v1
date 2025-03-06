@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { Separator } from "@radix-ui/react-separator";
+import { API_URL } from "@/lib/config";
 
 const accountFormSchema = z.object({
   firstName: z
@@ -51,7 +52,7 @@ export function NewCandidateForm() {
 
   async function onSubmit(data: AccountFormValues) {
     try {
-      const response = await fetch("http://localhost:3000/candidates", {
+      const response = await fetch(`${API_URL}candidates`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Trash, Loader2 } from "lucide-react";
+import { API_URL } from "@/lib/config";
 
 interface Interview {
   id: string;
@@ -31,7 +32,7 @@ export function AllInterviews() {
   // Fetch Interviews
   const fetchInterviews = () => {
     setLoading(true);
-    fetch("http://localhost:3000/interviews")
+    fetch(`${API_URL}interviews`)
       .then((response) => response.json())
       .then((data) => setInterviews(data))
       .catch((error) => console.error("Error fetching interviews:", error))
