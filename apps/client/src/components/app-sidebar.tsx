@@ -8,7 +8,6 @@ import {
   Command,
   Cpu,
   GalleryVerticalEnd,
-  LayoutDashboard,
   Settings2,
   Users,
   Workflow,
@@ -51,32 +50,13 @@ const data = {
   ],
   navMain: [
     {
-      title: "Dashboard",
-      url: "#",
-      icon: LayoutDashboard,
-      isActive: true,
-      items: [
-        {
-          title: "Overview",
-          url: "#",
-        },
-        {
-          title: "Analytics",
-          url: "#",
-        },
-        {
-          title: "Reports",
-          url: "#",
-        },
-      ],
-    },
-    {
       title: "Candidates",
       url: "#",
       icon: Users,
+      isActive: true,
       items: [
         {
-          title: "Add Candidates",
+          title: "Add Candidate",
           url: "/dashboard/new-candidate",
         },
         {
@@ -85,11 +65,11 @@ const data = {
         },
         {
           title: "Shortlisted",
-          url: "#",
+          url: "/dashboard/shortlisted",
         },
         {
           title: "Rejected",
-          url: "#",
+          url: "/dashboard/rejected",
         },
       ],
     },
@@ -99,19 +79,24 @@ const data = {
       icon: CalendarClock,
       items: [
         {
-          title: "Scheduled",
-          url: "#",
+          title: "All Interviews",
+          url: "/dashboard/interviews",
+        },
+        {
+          title: "Interview Result",
+          url: "/dashboard/interviews/result",
         },
         {
           title: "Completed",
-          url: "#",
+          url: "/dashboard/interviews/completed",
         },
         {
           title: "Pending",
-          url: "#",
+          url: "/dashboard/interviews/pending",
         },
       ],
     },
+
     {
       title: "Settings",
       url: "#",

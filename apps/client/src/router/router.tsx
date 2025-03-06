@@ -1,26 +1,49 @@
+import { Navigate, Route, Routes } from "react-router";
 import AuthLayout from "@/pages/auth";
 import { LoginForm } from "@/pages/auth/components/login-form";
 import { SignUpForm } from "@/pages/auth/components/sign-up-form";
-import { CandidateList } from "@/pages/candidates/candiate-list";
 import { NewCandidateForm } from "@/pages/candidates/new-candidate";
-import DashboardPage from "@/pages/dashboard";
-import { Route, Routes } from "react-router";
+import { ShortlistedCandidates } from "@/pages/candidates/short-listed";
+import DashboardLayout from "@/pages/dashboard";
+import { RejectedCandidates } from "@/pages/candidates/rejected-candidates";
+import { CandidateList } from "@/pages/candidates/candiate-list";
+import { AllInterviews } from "@/pages/interviews/all-interviews"; // Import AllInterviews component
 
 export default function Router() {
   return (
     <Routes>
-      <Route path="dashboard" element={<DashboardPage />}>
-        <Route path="new-candidate" element={<NewCandidateForm />} />
-        <Route path="all-candidates" element={<CandidateList />} />
-      </Route>
+      {/* Default Redirects */}
+      <Route
+        path="/"
+        element={<Navigate to="/dashboard/all-candidates" replace />}
+      />
+      <Route path="/auth" element={<Navigate to="/auth/login" replace />} />
 
-      {/* <Route path="login" element={<LoginPage />} />
-      <Route path="register" element={<>register</>} /> */}
-
+      {/* Authentication Routes */}
       <Route path="auth" element={<AuthLayout />}>
         <Route path="login" element={<LoginForm />} />
         <Route path="register" element={<SignUpForm />} />
       </Route>
+
+      {/* Dashboard Layout Routes */}
+      <Route path="dashboard" element={<DashboardLayout />}>
+        <Route index path="new-candidate" element={<NewCandidateForm />} />
+        <Route path="all-candidates" element={<CandidateList />} />
+        <Route path="shortlisted" element={<ShortlistedCandidates />} />
+        <Route path="rejected" element={<RejectedCandidates />} />
+        <Route path="interviews" element={<AllInterviews />} />{" "}
+        {/* ✅ New Route */}
+        <Route path="interviews">
+          <Route index element={<AllInterviews />} />
+          <Route path="result" element={<>reslt</>} />
+        </Route>
+      </Route>
+
+      {/* Catch-All: Redirect unknown routes */}
+      <Route
+        path="*"
+        element={<Navigate to="/dashboard/all-candidates" replace />}
+      />
     </Routes>
   );
 }
