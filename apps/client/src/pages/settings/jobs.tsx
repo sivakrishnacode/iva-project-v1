@@ -8,7 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Loader2 } from "lucide-react";
+import { Plus, Loader2, Eye } from "lucide-react";
 import { API_URL } from "@/lib/config";
 import {
   Dialog,
@@ -23,9 +23,11 @@ interface JobData {
   description: string;
   location: string;
   salary: number;
+  questions: InterviewQuestion[];
 }
 
 interface InterviewQuestion {
+  id?: string;
   question: string;
   optionA: string;
   optionB: string;
@@ -41,12 +43,18 @@ export function JobAndInterviewQuestion() {
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   const [questions, setQuestions] = useState<InterviewQuestion[]>([]);
   const [jobModalOpen, setJobModalOpen] = useState(false);
+  const [questionModalOpen, setQuestionModalOpen] = useState(false);
+  const [selectedQuestions, setSelectedQuestions] = useState<
+    InterviewQuestion[]
+  >([]);
+
   const [newJob, setNewJob] = useState<JobData>({
     id: "",
     title: "",
     description: "",
     location: "",
     salary: 0,
+    questions: [],
   });
 
   useEffect(() => {
@@ -61,6 +69,19 @@ export function JobAndInterviewQuestion() {
       setJobs(data);
     } catch (error) {
       console.error("Error fetching jobs:", error);
+    }
+  };
+
+  const fetchJobQuestions = (jobId: string) => {
+    console.log("====================================");
+    console.log(jobId);
+    console.log("====================================");
+    const job = jobs.find((job) => job.id === jobId);
+    console.log(job);
+
+    if (job) {
+      setSelectedQuestions(job.questions);
+      setQuestionModalOpen(true);
     }
   };
 
@@ -103,7 +124,6 @@ export function JobAndInterviewQuestion() {
         body: JSON.stringify(newJob),
       });
       if (!response.ok) throw new Error("Failed to create job");
-      alert("Job created successfully!");
       setJobModalOpen(false);
       setNewJob({
         id: "",
@@ -111,6 +131,7 @@ export function JobAndInterviewQuestion() {
         description: "",
         location: "",
         salary: 0,
+        questions: [],
       });
       fetchJobs();
     } catch (error) {
@@ -128,14 +149,13 @@ export function JobAndInterviewQuestion() {
     try {
       await Promise.all(
         questions.map((question) =>
-          fetch(`${API_URL}interview-questions`, {
+          fetch(`${API_URL}settings/job-questions`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ ...question, jobId: selectedJobId }),
           })
         )
       );
-      alert("Interview questions added successfully!");
       setModalOpen(false);
       setSelectedJobId(null);
       setQuestions([]);
@@ -173,8 +193,11 @@ export function JobAndInterviewQuestion() {
               <p>
                 <strong>Salary:</strong> ${job.salary}
               </p>
+              <p>
+                <strong>Questions:</strong> {job.questions?.length ?? 0}
+              </p>
             </CardContent>
-            <CardFooter className="flex justify-end">
+            <CardFooter className="flex justify-end space-x-2">
               <Button
                 variant="secondary"
                 onClick={() => openQuestionModal(job.id)}
@@ -182,12 +205,88 @@ export function JobAndInterviewQuestion() {
               >
                 <Plus className="w-4 h-4 mr-2" /> Add Questions
               </Button>
+              <Button
+                variant="outline"
+                onClick={() => fetchJobQuestions(job.id)}
+                className="flex items-center"
+              >
+                <Eye className="w-4 h-4 mr-2" /> Show Questions
+              </Button>
             </CardFooter>
           </Card>
         ))}
       </div>
 
-      {/* Add Interview Questions Modal */}
+      {/* Show Interview Questions Modal */}
+      <Dialog open={questionModalOpen} onOpenChange={setQuestionModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Interview Questions</DialogTitle>
+          </DialogHeader>
+
+          {selectedQuestions.length > 0 ? (
+            selectedQuestions.map((q, index) => (
+              <div key={index} className="border p-4 rounded-lg mb-4 shadow-md">
+                <p className="font-semibold">{q.question}</p>
+                <p>A) {q.optionA}</p>
+                <p>B) {q.optionB}</p>
+                <p>C) {q.optionC}</p>
+                <p>D) {q.optionD}</p>
+                <p className="mt-2 font-bold">
+                  Correct Answer: {q.correctAnswer}
+                </p>
+              </div>
+            ))
+          ) : (
+            <p className="text-center text-gray-500">No questions available.</p>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={jobModalOpen} onOpenChange={setJobModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create Job</DialogTitle>
+          </DialogHeader>
+          <Input
+            name="title"
+            placeholder="Job Title"
+            value={newJob.title}
+            onChange={(e) => setNewJob({ ...newJob, title: e.target.value })}
+            className="mb-3"
+          />
+          <Textarea
+            name="description"
+            placeholder="Job Description"
+            value={newJob.description}
+            onChange={(e) =>
+              setNewJob({ ...newJob, description: e.target.value })
+            }
+            className="mb-3"
+          />
+          <Input
+            name="location"
+            placeholder="Location"
+            value={newJob.location}
+            onChange={(e) => setNewJob({ ...newJob, location: e.target.value })}
+            className="mb-3"
+          />
+          <Input
+            name="salary"
+            placeholder="Salary"
+            type="number"
+            value={newJob.salary}
+            onChange={(e) =>
+              setNewJob({ ...newJob, salary: Number(e.target.value) })
+            }
+            className="mb-3"
+          />
+          <Button onClick={createJob} disabled={loading}>
+            {loading ? "Creating..." : "Create Job"}
+          </Button>
+        </DialogContent>
+      </Dialog>
+
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
         <DialogContent>
           <DialogHeader>
@@ -253,50 +352,6 @@ export function JobAndInterviewQuestion() {
 
           <Button onClick={saveQuestions} disabled={loading}>
             {loading ? "Saving..." : "Save Questions"}
-          </Button>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={jobModalOpen} onOpenChange={setJobModalOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Create Job</DialogTitle>
-          </DialogHeader>
-          <Input
-            name="title"
-            placeholder="Job Title"
-            value={newJob.title}
-            onChange={(e) => setNewJob({ ...newJob, title: e.target.value })}
-            className="mb-3"
-          />
-          <Textarea
-            name="description"
-            placeholder="Job Description"
-            value={newJob.description}
-            onChange={(e) =>
-              setNewJob({ ...newJob, description: e.target.value })
-            }
-            className="mb-3"
-          />
-          <Input
-            name="location"
-            placeholder="Location"
-            value={newJob.location}
-            onChange={(e) => setNewJob({ ...newJob, location: e.target.value })}
-            className="mb-3"
-          />
-          <Input
-            name="salary"
-            placeholder="Salary"
-            type="number"
-            value={newJob.salary}
-            onChange={(e) =>
-              setNewJob({ ...newJob, salary: Number(e.target.value) })
-            }
-            className="mb-3"
-          />
-          <Button onClick={createJob} disabled={loading}>
-            {loading ? "Creating..." : "Create Job"}
           </Button>
         </DialogContent>
       </Dialog>

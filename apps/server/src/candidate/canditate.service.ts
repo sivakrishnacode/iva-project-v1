@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CandidateStatus, Prisma } from '@prisma/client';
+import { CandidateStatus, InterviewMode, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/db/prisma.service';
 
 @Injectable()
@@ -58,7 +58,12 @@ export class CandidateService {
     });
   }
 
-  async scheduleInterview(candidateId: string, scheduledAt: string) {
+  async scheduleInterview(
+    candidateId: string,
+    scheduledAt: string,
+    jobId: string,
+    mode: InterviewMode,
+  ) {
     const parsedDate = new Date(scheduledAt);
 
     if (isNaN(parsedDate.getTime())) {
@@ -68,9 +73,9 @@ export class CandidateService {
     return this.prisma.interview.create({
       data: {
         candidateId,
-        jobId: '1',
-        mode: 'IN_PERSON',
-        scheduledAt: parsedDate, // ✅ Ensure parsedDate is valid before storing
+        jobId,
+        mode: mode,
+        scheduledAt: parsedDate, // ✅ Ensuring the parsed date is valid before storing
       },
     });
   }

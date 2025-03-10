@@ -47,12 +47,7 @@ interface Job {
 
 export function CandidateList() {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
-  const [jobs, _setJobs] = useState<Job[]>([
-    {
-      id: "1",
-      title: "Software Engineer",
-    },
-  ]);
+  const [jobs, setJobs] = useState<Job[]>([]);
   const [selectedMode, setSelectedMode] = useState<string>("");
 
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(
@@ -67,10 +62,10 @@ export function CandidateList() {
       .then((data) => setCandidates(data))
       .catch((error) => console.error("Error fetching candidates:", error));
 
-    // fetch(`${API_URL}jobs`)
-    //   .then((response) => response.json())
-    //   .then((data) => setJobs(data))
-    //   .catch((error) => console.error("Error fetching jobs:", error));
+    fetch(`${API_URL}settings/jobs`)
+      .then((response) => response.json())
+      .then((data) => setJobs(data))
+      .catch((error) => console.error("Error fetching jobs:", error));
   }, []);
 
   const updateCandidateStatus = (
@@ -108,6 +103,7 @@ export function CandidateList() {
       body: JSON.stringify({
         scheduledAt: scheduledTime,
         jobId: selectedJob,
+        mode: selectedMode,
       }),
     })
       .then((response) => response.json())

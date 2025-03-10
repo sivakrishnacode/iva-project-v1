@@ -7,7 +7,7 @@ import {
   Body,
   Query,
 } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { InterviewMode, Prisma } from '@prisma/client';
 import { CandidateService } from './canditate.service';
 
 @Controller('candidates')
@@ -38,7 +38,14 @@ export class CandidateController {
   async scheduleInterview(
     @Param('id') id: string,
     @Body('scheduledAt') scheduledAt: string,
+    @Body('jobId') jobId: string,
+    @Body('mode') mode: InterviewMode,
   ) {
-    return this.candidateService.scheduleInterview(id, scheduledAt);
+    return this.candidateService.scheduleInterview(
+      id,
+      scheduledAt,
+      jobId,
+      mode,
+    );
   }
 }
