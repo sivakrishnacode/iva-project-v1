@@ -83,7 +83,7 @@ const data = {
           url: "/dashboard/interviews",
         },
         {
-          title: "Interview Result",
+          title: "Result",
           url: "/dashboard/interviews/result",
         },
         {
@@ -96,28 +96,19 @@ const data = {
         },
       ],
     },
-
     {
       title: "Settings",
       url: "#",
       icon: Settings2,
       items: [
         {
-          title: "General",
-          url: "#",
+          title: "Jobs and Interview config",
+          url: "/dashboard/settings/jobs",
         },
-        {
-          title: "Interview Config",
-          url: "#",
-        },
-        {
-          title: "AI Models",
-          url: "#",
-        },
-        {
-          title: "Access Control",
-          url: "#",
-        },
+        // {
+        //   title: "Interview Config",
+        //   url: "#",
+        // },
       ],
     },
   ],

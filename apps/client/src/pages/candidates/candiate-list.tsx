@@ -100,19 +100,16 @@ export function CandidateList() {
   const bookInterview = () => {
     if (!selectedCandidate || !scheduledTime || !selectedJob) return;
 
-    fetch(
-      `http://localhost:3000/candidates/${selectedCandidate.id}/new-interview`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          scheduledAt: scheduledTime,
-          jobId: selectedJob,
-        }),
-      }
-    )
+    fetch(`${API_URL}candidates/${selectedCandidate.id}/new-interview`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        scheduledAt: scheduledTime,
+        jobId: selectedJob,
+      }),
+    })
       .then((response) => response.json())
       .then(() => {
         setCandidates((prevCandidates) =>

@@ -31,6 +31,10 @@ const accountFormSchema = z.object({
   phone: z.string().min(10, { message: "Invalid phone number." }),
   address: z.string().min(5, { message: "Address is too short." }),
   dob: z.string().min(10, { message: "Invalid date format (YYYY-MM-DD)." }),
+  jobRole: z.string().min(3, { message: "Job role is required." }), // Add jobRole
+  experience: z.coerce
+    .number()
+    .min(0, { message: "Experience must be a positive number." }),
 });
 
 type AccountFormValues = z.infer<typeof accountFormSchema>;
@@ -42,6 +46,8 @@ const defaultValues: Partial<AccountFormValues> = {
   phone: "",
   address: "",
   dob: "2000-01-01",
+  jobRole: "", // Ensure jobRole is initialized,
+  experience: 0, // Default value for experience
 };
 
 export function NewCandidateForm() {
@@ -189,6 +195,40 @@ export function NewCandidateForm() {
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="jobRole"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Job Role</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Job Role" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="experience"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Experience (Years)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Enter years of experience"
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))} // Ensure it's a number
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <Button type="submit">Create Profile</Button>
           </form>
         </FormProvider>

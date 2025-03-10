@@ -8,6 +8,8 @@ import DashboardLayout from "@/pages/dashboard";
 import { RejectedCandidates } from "@/pages/candidates/rejected-candidates";
 import { CandidateList } from "@/pages/candidates/candiate-list";
 import { AllInterviews } from "@/pages/interviews/all-interviews"; // Import AllInterviews component
+import { ResultInterviews } from "@/pages/interviews/interview-result";
+import { JobAndInterviewQuestion } from "@/pages/settings/jobs";
 
 export default function Router() {
   return (
@@ -35,7 +37,10 @@ export default function Router() {
         {/* ✅ New Route */}
         <Route path="interviews">
           <Route index element={<AllInterviews />} />
-          <Route path="result" element={<>reslt</>} />
+          <Route path="result" element={<ResultInterviews />} />
+        </Route>
+        <Route path="settings">
+          <Route path="jobs" element={<JobAndInterviewQuestion />} />
         </Route>
       </Route>
 

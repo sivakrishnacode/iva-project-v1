@@ -23,7 +23,13 @@ export class CandidateService {
   async createCandidate(data: Prisma.CandidateCreateInput) {
     return this.prisma.candidate.create({
       data: {
-        ...data,
+        address: data.address,
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        phone: data.phone,
+        experience: data.experience,
+        testLink: '',
         dob: new Date(data.dob),
         status: data.status || CandidateStatus.PENDING,
       },
@@ -62,6 +68,7 @@ export class CandidateService {
     return this.prisma.interview.create({
       data: {
         candidateId,
+        jobId: '1',
         mode: 'IN_PERSON',
         scheduledAt: parsedDate, // ✅ Ensure parsedDate is valid before storing
       },

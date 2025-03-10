@@ -13,6 +13,8 @@ enum CandidateStatus {
   PENDING
   REJECTED
   IN_PROGRESS
+  SHORTLISTED
+  VIOLATED
 }
 
 enum InterviewStatus {
@@ -35,26 +37,52 @@ enum InterviewResult {
   NOT_EVALUATED
 }
 
+// Job Model
+model Job {
+  id          String  @id @default(uuid())
+  title       String
+  description String
+  location    String?
+  salary      Float?
+  status      String  @default("OPEN") // Status: OPEN, CLOSED, etc.
+
+  candidates Candidate[] // Candidates applying for the job
+  interviews Interview[] // Interviews related to the job
+  questions  JobQuestion[] // One-to-Many: Job → Questions
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 // Candidate Model
 model Candidate {
-  id        String          @id @default(uuid())
-  firstName String
-  lastName  String
-  email     String          @unique
-  phone     String
-  dob       DateTime
-  address   String
-  status    CandidateStatus @default(PENDING)
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
+  id         String          @id @default(uuid())
+  firstName  String
+  lastName   String
+  email      String          @unique
+  phone      String
+  dob        DateTime
+  address    String
+  status     CandidateStatus @default(PENDING)
+  resume     String? // Store resume URL or file reference
+  experience Int
+  testLink   String
+  testResult TestResult?
+
+  jobId String? // Candidate applied for a job
+  job   Job?    @relation(fields: [jobId], references: [id])
 
   interviews Interview[] // Relationship with Interview table
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Interview Model
 model Interview {
   id              String          @id @default(uuid())
   candidateId     String
+  jobId           String
   scheduledAt     DateTime
   status          InterviewStatus @default(SCHEDULED) // Uses enum
   mode            InterviewMode
@@ -65,9 +93,44 @@ model Interview {
   result          InterviewResult @default(NOT_EVALUATED)
   rescheduleCount Int             @default(0)
   rescheduledAt   DateTime?
-  panelMembers    Json?
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
 
   candidate Candidate @relation(fields: [candidateId], references: [id])
+  job       Job       @relation(fields: [jobId], references: [id])
+}
+
+// Job Question Model (Now belongs to Job instead of Interview)
+model JobQuestion {
+  id            String @id @default(uuid())
+  jobId         String
+  question      String
+  optionA       String
+  optionB       String
+  optionC       String
+  optionD       String
+  correctAnswer String // Store the correct option (e.g., "A", "B", "C", or "D")
+
+  createdAt DateTime @default(now())
+
+  job Job @relation(fields: [jobId], references: [id])
+}
+
+// Test Result Model
+model TestResult {
+  id          String    @id @default(uuid())
+  candidateId String    @unique
+  candidate   Candidate @relation(fields: [candidateId], references: [id])
+  score       Int
+  feedback    String?
+  violations  Boolean   @default(false)
+
+  createdAt DateTime @default(now())
+}
+
+// HR User Model
+model HRUser {
+  id       String @id @default(uuid())
+  email    String @unique
+  password String // Hashed password
 }
