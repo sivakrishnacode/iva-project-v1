@@ -72,7 +72,7 @@ export function CandidateList() {
     id: string,
     newStatus: "HIRED" | "PENDING" | "REJECTED"
   ) => {
-    fetch(`http://localhost:3000/candidates/${id}/status`, {
+    fetch(`${API_URL}candidates/${id}/status`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

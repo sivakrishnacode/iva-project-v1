@@ -149,3 +149,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+.watermark {
+  position: absolute;
+  font-weight: bold;
+  background-color: rgb(245, 245, 245);
+  pointer-events: none;
+  user-select: none;
+  z-index: 9999;
+}

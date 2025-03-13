@@ -5,6 +5,7 @@ import Router from "./router/router.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
+    <div className="watermark">HR Dashboard</div>
     <Router />
   </BrowserRouter>
 );

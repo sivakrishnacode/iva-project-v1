@@ -9,10 +9,6 @@ import { buttonVariants } from "@/components/ui/button";
 export default function AuthLayout() {
   const location = useLocation();
 
-  console.log("====================================");
-  console.log("location", location.pathname);
-  console.log("====================================");
-
   return (
     <>
       <div className="md:hidden">

@@ -17,6 +17,7 @@ export class CandidateController {
   @Get()
   async getAllCandidates(
     @Query('status') status?: 'HIRED' | 'PENDING' | 'REJECTED',
+    @Query('email') email?: string, // Accept email as an optional query parameter
   ) {
     return this.candidateService.getAllCandidates(status);
   }

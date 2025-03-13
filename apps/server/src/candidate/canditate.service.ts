@@ -6,8 +6,19 @@ import { PrismaService } from 'src/db/prisma.service';
 export class CandidateService {
   constructor(private prisma: PrismaService) {}
 
-  async getAllCandidates(status?: 'HIRED' | 'PENDING' | 'REJECTED') {
-    const whereCondition = status ? { status } : {};
+  async getAllCandidates(
+    status?: 'HIRED' | 'PENDING' | 'REJECTED',
+    email?: string,
+  ) {
+    const whereCondition: any = {};
+
+    if (status) {
+      whereCondition.status = status;
+    }
+
+    if (email) {
+      whereCondition.email = email;
+    }
 
     const candidates = await this.prisma.candidate.findMany({
       where: whereCondition,
