@@ -24,6 +24,7 @@ export class CandidateService {
     return this.prisma.candidate.create({
       data: {
         address: data.address,
+        password: `${data.firstName}@123`,
         email: data.email,
         firstName: data.firstName,
         lastName: data.lastName,

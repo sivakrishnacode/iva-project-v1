@@ -64,6 +64,7 @@ model Candidate {
   dob        DateTime
   address    String
   status     CandidateStatus @default(PENDING)
+  password   String
   resume     String? // Store resume URL or file reference
   experience Int
   testLink   String
