@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { Separator } from "@radix-ui/react-separator";
 import { API_URL } from "@/lib/config";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UploadCloud } from "lucide-react";
 
 const accountFormSchema = z.object({
@@ -61,6 +61,45 @@ export function NewCandidateForm() {
     resolver: zodResolver(accountFormSchema),
     defaultValues,
   });
+
+  useEffect(() => {
+    async function fetchCandidateData() {
+      try {
+        const response = await fetch(
+          `${API_URL}candidates/?email=${localStorage.getItem("candidateEmail")}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch candidate data");
+        }
+
+        const data = await response.json();
+
+        let candidate = data[0];
+
+        // Update the form fields with fetched data
+        form.reset({
+          firstName: candidate.firstName,
+          lastName: candidate.lastName,
+          email: candidate.email,
+          phone: candidate.phone,
+          address: candidate.address,
+          dob: candidate.dob,
+          jobRole: candidate.jobRole,
+          experience: candidate.experience,
+          resume: candidate.resume ? candidate.resume : null,
+        });
+
+        // Handle resume file separately
+        if (candidate.resume) {
+          setResumeFile(new File([], candidate.resume)); // Simulating file state
+        }
+      } catch (error) {
+        console.error("Error fetching candidate data:", error);
+      }
+    }
+
+    fetchCandidateData();
+  }, []);
 
   async function onSubmit(data: AccountFormValues) {
     const formData = new FormData();
@@ -274,7 +313,7 @@ export function NewCandidateForm() {
               )}
             />
 
-            <Button type="submit">Create Profile</Button>
+            <Button type="submit">Submit Profile</Button>
           </form>
         </FormProvider>
       </div>

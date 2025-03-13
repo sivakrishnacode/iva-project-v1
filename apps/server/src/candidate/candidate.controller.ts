@@ -22,7 +22,7 @@ export class CandidateController {
     @Query('status') status?: 'HIRED' | 'PENDING' | 'REJECTED',
     @Query('email') email?: string, // Accept email as an optional query parameter
   ) {
-    return this.candidateService.getAllCandidates(status);
+    return this.candidateService.getAllCandidates(status, email);
   }
 
   @Post('create')
