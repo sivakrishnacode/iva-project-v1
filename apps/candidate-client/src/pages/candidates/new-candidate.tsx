@@ -17,6 +17,8 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { Separator } from "@radix-ui/react-separator";
 import { API_URL } from "@/lib/config";
+import { useState } from "react";
+import { UploadCloud } from "lucide-react";
 
 const accountFormSchema = z.object({
   firstName: z
@@ -35,6 +37,7 @@ const accountFormSchema = z.object({
   experience: z.coerce
     .number()
     .min(0, { message: "Experience must be a positive number." }),
+  resume: z.any().optional(),
 });
 
 type AccountFormValues = z.infer<typeof accountFormSchema>;
@@ -48,22 +51,36 @@ const defaultValues: Partial<AccountFormValues> = {
   dob: "2000-01-01",
   jobRole: "", // Ensure jobRole is initialized,
   experience: 0, // Default value for experience
+  resume: null,
 };
 
 export function NewCandidateForm() {
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(accountFormSchema),
     defaultValues,
   });
 
   async function onSubmit(data: AccountFormValues) {
+    const formData = new FormData();
+    formData.append("firstName", data.firstName);
+    formData.append("lastName", data.lastName);
+    formData.append("email", data.email);
+    formData.append("phone", data.phone);
+    formData.append("address", data.address);
+    formData.append("dob", data.dob);
+    formData.append("jobRole", data.jobRole);
+    formData.append("experience", data.experience.toString());
+
+    if (resumeFile) {
+      formData.append("resume", resumeFile);
+    }
+
     try {
-      const response = await fetch(`${API_URL}candidates`, {
+      const response = await fetch(`${API_URL}candidates/create`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+        body: formData,
       });
 
       if (!response.ok) {
@@ -87,6 +104,7 @@ export function NewCandidateForm() {
 
       // Optionally reset form
       form.reset();
+      setResumeFile(null);
     } catch (error) {
       toast({
         title: "Error",
@@ -223,6 +241,33 @@ export function NewCandidateForm() {
                       {...field}
                       onChange={(e) => field.onChange(Number(e.target.value))} // Ensure it's a number
                     />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="resume"
+              render={() => (
+                <FormItem>
+                  <FormLabel>Resume</FormLabel>
+                  <FormControl>
+                    <label className="border p-3 flex items-center gap-2 cursor-pointer">
+                      <UploadCloud className="w-5 h-5" />
+                      <span>
+                        {resumeFile ? resumeFile.name : "Upload Resume (PDF)"}
+                      </span>
+                      <input
+                        type="file"
+                        accept="application/pdf"
+                        className="hidden"
+                        onChange={(e) =>
+                          setResumeFile(e.target.files?.[0] || null)
+                        }
+                      />
+                    </label>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

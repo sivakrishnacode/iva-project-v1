@@ -103,6 +103,7 @@ export function NavUser({
 
             <DropdownMenuItem
               onClick={() => {
+                localStorage.clear();
                 navigate("/auth/login");
               }}
             >

@@ -6,9 +6,12 @@ import {
   Param,
   Body,
   Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { InterviewMode, Prisma } from '@prisma/client';
 import { CandidateService } from './canditate.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('candidates')
 export class CandidateController {
@@ -22,9 +25,13 @@ export class CandidateController {
     return this.candidateService.getAllCandidates(status);
   }
 
-  @Post()
-  async createCandidate(@Body() data: Prisma.CandidateCreateInput) {
-    return this.candidateService.createCandidate(data);
+  @Post('create')
+  @UseInterceptors(FileInterceptor('resume'))
+  async createCandidate(
+    @Body() data: Prisma.CandidateCreateInput,
+    @UploadedFile() file: any,
+  ) {
+    return this.candidateService.createCandidate(data, file);
   }
 
   @Post(':id/status')

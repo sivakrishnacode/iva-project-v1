@@ -3,10 +3,8 @@ import AuthLayout from "@/pages/auth";
 import { LoginForm } from "@/pages/auth/components/login-form";
 import { SignUpForm } from "@/pages/auth/components/sign-up-form";
 import { NewCandidateForm } from "@/pages/candidates/new-candidate";
-import { ShortlistedCandidates } from "@/pages/candidates/short-listed";
 import DashboardLayout from "@/pages/dashboard";
 import { RejectedCandidates } from "@/pages/candidates/rejected-candidates";
-import { CandidateList } from "@/pages/candidates/candiate-list";
 import { AllInterviews } from "@/pages/interviews/all-interviews";
 import { ResultInterviews } from "@/pages/interviews/interview-result";
 import { JobAndInterviewQuestion } from "@/pages/settings/jobs";
@@ -46,7 +44,7 @@ export default function Router() {
       {/* Redirect based on authentication */}
       <Route
         path="/"
-        element={<Navigate to="/dashboard/all-candidates" replace />}
+        element={<Navigate to="/dashboard/new-candidate" replace />}
       />
 
       {/* Authentication Routes (Restricted for logged-in users) */}
@@ -71,13 +69,9 @@ export default function Router() {
           </ProtectedRoute>
         }
       >
-        <Route path="all-candidates" element={<CandidateList />} />
-        <Route path="shortlisted" element={<ShortlistedCandidates />} />
-        <Route path="rejected" element={<RejectedCandidates />} />
         <Route path="new-candidate" element={<NewCandidateForm />} />
-        <Route path="interviews" element={<AllInterviews />} />
-        <Route path="interview-results" element={<ResultInterviews />} />
-        <Route path="jobs" element={<JobAndInterviewQuestion />} />
+        <Route path="available-interviews" element={<AllInterviews />} />
+        <Route path="interview/results" element={<ResultInterviews />} />
       </Route>
 
       {/* Catch-all Route */}

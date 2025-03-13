@@ -38,6 +38,11 @@ export function LoginForm({
       console.log("====================================");
       if (data && data[0].password == password) {
         localStorage.setItem("candidateEmail", email);
+        localStorage.setItem("candidateId", data[0].id);
+        localStorage.setItem(
+          "candidateName",
+          `${data[0].firstName} ${data[0].lastName}`
+        );
         navigate("/dashboard/all-candidates");
       } else {
         setError("Invalid email or password.");

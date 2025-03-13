@@ -27,8 +27,8 @@ import { TeamSwitcher } from "./team-switcher";
 // This is sample data.
 const data = {
   user: {
-    name: "Dhivya Prabha",
-    email: "test@example.com",
+    name: `${localStorage.getItem("candidateName")}`,
+    email: `${localStorage.getItem("candidateEmail")}`,
     avatar: "/avatars/shadcn.jpg",
   },
   teams: [
@@ -56,20 +56,8 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "Add Candidate",
+          title: "Register Candidate",
           url: "/dashboard/new-candidate",
-        },
-        {
-          title: "All Candidates",
-          url: "/dashboard/all-candidates",
-        },
-        {
-          title: "Shortlisted",
-          url: "/dashboard/shortlisted",
-        },
-        {
-          title: "Rejected",
-          url: "/dashboard/rejected",
         },
       ],
     },
@@ -77,38 +65,16 @@ const data = {
       title: "Interviews",
       url: "#",
       icon: CalendarClock,
+      isActive: true,
       items: [
         {
-          title: "All Interviews",
-          url: "/dashboard/interviews",
+          title: "Available Interviews",
+          url: "/dashboard/available-interviews",
         },
         {
           title: "Result",
           url: "/dashboard/interviews/result",
         },
-        {
-          title: "Completed",
-          url: "/dashboard/interviews/completed",
-        },
-        {
-          title: "Pending",
-          url: "/dashboard/interviews/pending",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "Jobs and Interview config",
-          url: "/dashboard/settings/jobs",
-        },
-        // {
-        //   title: "Interview Config",
-        //   url: "#",
-        // },
       ],
     },
   ],
@@ -135,9 +101,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       {/* header */}
-      <SidebarHeader>
+      {/* <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
-      </SidebarHeader>
+      </SidebarHeader> */}
 
       {/* list content */}
       <SidebarContent>
