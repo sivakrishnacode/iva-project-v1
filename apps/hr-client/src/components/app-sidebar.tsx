@@ -77,6 +77,7 @@ const data = {
       title: "Interviews",
       url: "#",
       icon: CalendarClock,
+      isActive: true,
       items: [
         {
           title: "All Interviews",
@@ -86,20 +87,13 @@ const data = {
           title: "Result",
           url: "/dashboard/interviews/result",
         },
-        {
-          title: "Completed",
-          url: "/dashboard/interviews/completed",
-        },
-        {
-          title: "Pending",
-          url: "/dashboard/interviews/pending",
-        },
       ],
     },
     {
       title: "Settings",
       url: "#",
       icon: Settings2,
+      isActive: true,
       items: [
         {
           title: "Jobs and Interview config",

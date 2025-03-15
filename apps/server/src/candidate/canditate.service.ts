@@ -61,6 +61,16 @@ export class CandidateService {
       resumePath = `/uploads/resumes/${filename}`;
     }
 
+    const existingEmail = await this.prisma.candidate.findUnique({
+      where: {
+        email: data.email,
+      },
+    });
+
+    if (existingEmail) {
+      throw new Error('Email already exists');
+    }
+
     return this.prisma.candidate.create({
       data: {
         address: data.address,

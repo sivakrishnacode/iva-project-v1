@@ -8,7 +8,6 @@ import {
   Command,
   Cpu,
   GalleryVerticalEnd,
-  Settings2,
   Users,
   Workflow,
 } from "lucide-react";
@@ -17,12 +16,10 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
-import { TeamSwitcher } from "./team-switcher";
 
 // This is sample data.
 const data = {
@@ -56,8 +53,8 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "Register Candidate",
-          url: "/dashboard/new-candidate",
+          title: "Candidate Details",
+          url: "/dashboard/details",
         },
       ],
     },
@@ -73,7 +70,7 @@ const data = {
         },
         {
           title: "Result",
-          url: "/dashboard/interviews/result",
+          url: "/dashboard/results",
         },
       ],
     },

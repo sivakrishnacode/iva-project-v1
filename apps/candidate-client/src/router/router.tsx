@@ -1,14 +1,12 @@
 import { Navigate, Route, Routes, useLocation } from "react-router";
 import AuthLayout from "@/pages/auth";
 import { LoginForm } from "@/pages/auth/components/login-form";
-import { SignUpForm } from "@/pages/auth/components/sign-up-form";
 import { NewCandidateForm } from "@/pages/candidates/new-candidate";
 import DashboardLayout from "@/pages/dashboard";
-import { RejectedCandidates } from "@/pages/candidates/rejected-candidates";
 import { AllInterviews } from "@/pages/interviews/all-interviews";
 import { ResultInterviews } from "@/pages/interviews/interview-result";
-import { JobAndInterviewQuestion } from "@/pages/settings/jobs";
 import { useEffect } from "react";
+import CandidateDetails from "@/pages/candidates/candidate-details";
 
 // Protected Route: Restricts access to authenticated users
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -41,11 +39,11 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 export default function Router() {
   return (
     <Routes>
-      {/* Redirect based on authentication */}
+      {/* Redirect based on authentication
       <Route
         path="/"
         element={<Navigate to="/dashboard/new-candidate" replace />}
-      />
+      /> */}
 
       {/* Authentication Routes (Restricted for logged-in users) */}
       <Route
@@ -57,8 +55,8 @@ export default function Router() {
         }
       >
         <Route path="login" element={<LoginForm />} />
-        <Route path="register" element={<SignUpForm />} />
       </Route>
+      <Route path="register" element={<NewCandidateForm />} />
 
       {/* Protected Dashboard Routes */}
       <Route
@@ -69,13 +67,13 @@ export default function Router() {
           </ProtectedRoute>
         }
       >
-        <Route path="new-candidate" element={<NewCandidateForm />} />
+        <Route path="details" element={<CandidateDetails />} />
         <Route path="available-interviews" element={<AllInterviews />} />
-        <Route path="interview/results" element={<ResultInterviews />} />
+        <Route path="results" element={<ResultInterviews />} />
       </Route>
 
       {/* Catch-all Route */}
-      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      <Route path="*" element={<Navigate to="/dashboard/details" replace />} />
     </Routes>
   );
 }

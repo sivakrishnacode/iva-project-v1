@@ -1,30 +1,19 @@
 import { useEffect, useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { API_URL } from "@/lib/config";
 import { Badge } from "@/components/ui/badge";
 
-interface Interview {
+interface Result {
   id: string;
-  scheduledAt: string;
-  result: string;
+  candidateId: string;
   score: number | null;
-  candidate: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    jobRole: string;
-    experience: number;
-  };
+  feedback: string;
+  violations: boolean;
+  createdAt: string;
 }
 
 export function ResultInterviews() {
-  const [interviews, setInterviews] = useState<Interview[]>([]);
+  const [result, setResult] = useState<Result>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -34,13 +23,12 @@ export function ResultInterviews() {
   const fetchInterviews = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}interviews`);
+      const response = await fetch(`${API_URL}interviews/result`);
       const data = await response.json();
-      console.log("Fetched Data:", data); // Debugging log
-      setInterviews(Array.isArray(data) ? data : []); // Ensure it's an array
+      console.log("Fetched Data:", data);
+      setResult(data);
     } catch (error) {
       console.error("Error fetching interviews:", error);
-      setInterviews([]); // Prevents crashes
     } finally {
       setLoading(false);
     }
@@ -51,65 +39,55 @@ export function ResultInterviews() {
       <h2 className="text-2xl font-bold mb-6">Interview Results</h2>
       {loading ? (
         <p>Loading...</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {interviews?.map((interview) => (
-            <Card key={interview.id} className="shadow-lg p-4">
-              <CardHeader className="text-lg font-semibold">
-                {interview.candidate.firstName} {interview.candidate.lastName}
-              </CardHeader>
-              <CardContent>
-                <p>
-                  <strong>Email:</strong> {interview.candidate.email}
-                </p>
-                <p>
-                  <strong>Phone:</strong> {interview.candidate.phone}
-                </p>
-                <p>
-                  <strong>Job Role:</strong> {interview.candidate.jobRole}
-                </p>
-
-                <p>
-                  <strong>Score:</strong>{" "}
-                  {interview.score !== null ? interview.score : "N/A"}
-                </p>
-                <p>
-                  <strong>Result:</strong>{" "}
-                  <InterviewResult result={interview.result} />
-                </p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
-      {interviews.length === 0 && !loading && (
+      ) : !result ? (
         <p className="text-center text-gray-500 mt-6">
           No interview results available.
         </p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Card key={result.id} className="shadow-lg p-4">
+            <CardHeader className="text-lg font-semibold">
+              Interview ID: {result.id}
+            </CardHeader>
+            <CardContent>
+              <p>
+                <strong>Score:</strong>{" "}
+                {result.score !== null ? result.score : "N/A"}
+              </p>
+              <p>
+                <strong>Feedback:</strong>{" "}
+                <InterviewFeedback feedback={result.feedback} />
+              </p>
+              <p>
+                <strong>Violations:</strong> {result.violations ? "Yes" : "No"}
+              </p>
+              <p>
+                <strong>Date:</strong>{" "}
+                {new Date(result.createdAt).toLocaleDateString()}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
       )}
     </div>
   );
 }
 
-interface InterviewResultProps {
-  result: string;
+interface InterviewFeedbackProps {
+  feedback: string;
 }
 
-export function InterviewResult({ result }: InterviewResultProps) {
-  const getBadgeVariant = (status: string) => {
-    switch (status) {
+export function InterviewFeedback({ feedback }: InterviewFeedbackProps) {
+  const getBadgeVariant = (feedback: string) => {
+    switch (feedback.toUpperCase()) {
       case "PASSED":
-        return "default"; // Assuming "default" maps to a success-like color
+        return "default";
       case "FAILED":
         return "destructive";
-      case "NOT_EVALUATED":
-        return "secondary";
       default:
         return "outline";
     }
   };
 
-  return (
-    <Badge variant={getBadgeVariant(result)}>{result.replace("_", " ")}</Badge>
-  );
+  return <Badge variant={getBadgeVariant(feedback)}>{feedback}</Badge>;
 }
