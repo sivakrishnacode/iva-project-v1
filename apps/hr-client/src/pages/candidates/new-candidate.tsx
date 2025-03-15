@@ -58,7 +58,7 @@ export function NewCandidateForm() {
 
   async function onSubmit(data: AccountFormValues) {
     try {
-      const response = await fetch(`${API_URL}candidates`, {
+      const response = await fetch(`${API_URL}candidates/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -87,7 +87,8 @@ export function NewCandidateForm() {
 
       // Optionally reset form
       form.reset();
-    } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error : any) {
       toast({
         title: "Error",
         description: "Could not create candidate. Please try again.",
