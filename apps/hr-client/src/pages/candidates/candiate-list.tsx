@@ -72,7 +72,7 @@ export function CandidateList() {
     id: string,
     newStatus: "HIRED" | "PENDING" | "REJECTED"
   ) => {
-    fetch(`http://localhost:3000/candidates/${id}/status`, {
+    fetch(`${API_URL}/candidates/${id}/status`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -212,7 +212,7 @@ export function CandidateList() {
                           </DialogDescription>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
-                          <div className="grid grid-cols-4 items-center gap-4">
+                          <div className="grid grid-cols-4 gap-4 items-center">
                             <Label htmlFor="datetime" className="text-right">
                               Date & Time
                             </Label>
@@ -224,7 +224,7 @@ export function CandidateList() {
                               onChange={(e) => setScheduledTime(e.target.value)}
                             />
                           </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
+                          <div className="grid grid-cols-4 gap-4 items-center">
                             <Label htmlFor="jobRole" className="text-right">
                               Job Role
                             </Label>
@@ -244,7 +244,7 @@ export function CandidateList() {
                               </SelectContent>
                             </Select>
                           </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
+                          <div className="grid grid-cols-4 gap-4 items-center">
                             <Label htmlFor="mode" className="text-right">
                               Mode
                             </Label>
